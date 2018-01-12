@@ -4,8 +4,8 @@ import java.util.HashSet;
 
 
 public class Clinic {
-    String name;
-    HashSet<Patients> patients = new HashSet();
+    private String name;
+    HashSet<Patients> patients = new HashSet<>();
     Clinic(String name){
         this.name=name;
     }
@@ -28,6 +28,9 @@ public class Clinic {
             }
         }
         return null;
+    }
+    public HashSet<Patients> getPatients(){
+        return patients;
     }
     public void printPatient(int id){
         Patients s=getPatient(id);

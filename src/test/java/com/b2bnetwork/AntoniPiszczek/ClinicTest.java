@@ -3,25 +3,44 @@ package com.b2bnetwork.AntoniPiszczek;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameter;
+import org.junit.runners.Parameterized.Parameters;
 
-import static org.hamcrest.Matchers.any;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.MatcherAssert.assertThat;
 
+import java.util.Arrays;
+import java.util.Collection;
+
+@RunWith(Parameterized.class)
 public class ClinicTest {
-
-    Clinic clinic=new Clinic("probna klinika");
+    @Parameters
+    public static Collection<Object[]> data(){
+        return Arrays.asList(new Object[][]{
+            /* id name lastname*/
+              {1, "imie", "nazwisko"},
+              {2, "", "nazwisko2"},
+              {3, "imie3", ""},
+              {0, "imie4", "nazwisko4"}
+        });
+    }
+    @Parameter
+    public int id;
+    @Parameter(1)
+    public String name;
+    @Parameter(2)
+    public String lastName;
+    private Clinic clinic=new Clinic("probna klinika");
     @Before
     public void SetUP(){
         for (int i = 0; i<=10; i++){
-            clinic.addPatient(i, "pacjent" + Integer.toString(i), "nazwisko");
+            clinic.patients.add(new Patients(i,"pacjent"+Integer.toString(i), "nazwisko"+Integer.toString(i)));
         }
     }
     @Test
     public void setName() {
-        clinic.setName("zmieniona nazwa");
-        Assert.assertEquals("zmieniona nazwa",clinic.getName());
+        clinic.setName(name);
+        Assert.assertEquals(name,clinic.getName());
         clinic.setName("probna klinika");
     }
     @Test
@@ -30,15 +49,15 @@ public class ClinicTest {
     }
     @Test
     public void addPatient() {
-        clinic.addPatient(11,"ant", "pi");
-        Assert.assertTrue(clinic.patients.stream().anyMatch(s->s.getName()=="ant"));
+        clinic.addPatient(id,name,lastName);
+        Assert.assertTrue(clinic.getPatients().stream().anyMatch(s->s.getName().equals(name)));
     }
 
     @Test
     public void removePatient() {
-        clinic.addPatient(12, "ant2", "pi2");
-        clinic.removePatient(12);
-        Assert.assertTrue(clinic.patients.stream().noneMatch(s->s.getName()=="ant2"));
+        clinic.addPatient(id,name,lastName);
+        clinic.removePatient(id);
+        Assert.assertTrue(clinic.getPatients().stream().noneMatch(s->s.getName().equals(name)));
     }
 
     @Test
